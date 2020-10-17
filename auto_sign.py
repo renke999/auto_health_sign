@@ -166,6 +166,6 @@ def qiandao(username, password, xuehao, qinshi):
     # server酱推送
     textPush = username + '签到信息'
     despPush = post_res
-    urlPush = 'https://sc.ftqq.com/SCU107843T2f8731d8dcbb7b6fdae07ccb585b9c705f23e6e52ede8.send'
+    urlPush = 'https://sc.ftqq.com/SCU107843T2f8731d8dcbb7b6fdae07ccb585b9c705f23e6e52ede8.send'    # 填写自己的推送地址，http://sc.ftqq.com/?c=wechat&a=bind
     dataPush = {'text':textPush, 'desp':despPush}
     requests.post(urlPush, data=dataPush, verify=False)
