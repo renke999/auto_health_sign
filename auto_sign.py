@@ -5,6 +5,8 @@ import json
 import time
 import random
 import urllib.parse
+import warnings
+warnings.filterwarnings("ignore")
 
 
 def main_handler(event, context):
@@ -12,28 +14,27 @@ def main_handler(event, context):
 
 
 def main():
-    qiandao('renke2118', "*******", "********", "*********")
+    qiandao('renke2118', "密码, "寝室号")
 
 
 if __name__ == '__main__':
     main()
-  
 
-def qiandao(username, password, xuehao, qinshi):
-    
+
+def qiandao(username, password, qinshi):
     # 获取session
     sess = requests.session()
+    sess.verify = False
 
 
     # 获取wengine_vpn_ticket
-    url1 = 'https://vpns.jlu.edu.cn/'    
     url1_headers = {
         'Host': 'vpns.jlu.edu.cn',
         'Cache-Control': 'max-age=0',
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36',
     }
-    sess.post(url1, headers=url1_headers, verify=False)
+    sess.post('https://vpns.jlu.edu.cn/', headers=url1_headers)
     cookie1 = ''
     for x in sess.cookies:
         cookie1 += x.name + '=' + x.value + ';'
@@ -50,7 +51,7 @@ def qiandao(username, password, xuehao, qinshi):
         'cookie': cookie1,
     }
     url2_data = 'auth_type=local&username='+username+'&sms_code=&password='+password
-    sess.post(url_2, headers=url2_headers, data=url2_data, verify=False)
+    sess.post(url_2, headers=url2_headers, data=url2_data)
     cookie2 = ''
     for x in sess.cookies:
         cookie2 += x.name + '=' + x.value + ';'
@@ -73,6 +74,7 @@ def qiandao(username, password, xuehao, qinshi):
     cookie = cookie[:-1]
 
 
+
     # 获取元信息
     start_url = 'https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b/infoplus/form/BKSMRDK/start'
     start_headers = {
@@ -80,12 +82,13 @@ def qiandao(username, password, xuehao, qinshi):
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36',
         'Cookie': cookie,
+        'Referer': 'https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b/infoplus/form/BKSMRDK/start'
     }
     start_res = sess.get(start_url, headers=start_headers, verify=False).text
     csrfToken = re.findall(re.compile(r'<meta itemscope="csrfToken" content="(\w*)'), start_res)[0]
     idc = re.findall(re.compile(r'id="idc" value="(\w*)'), start_res)[0] 
     release = re.findall(re.compile(r'id="release" value="(\w*)'), start_res)[0]
-    # print(idc, release, csrfToken)
+
 
 
     # 获取当前表单的step_id
@@ -97,47 +100,44 @@ def qiandao(username, password, xuehao, qinshi):
         'Cookie':  cookie,
     }
     get_data = 'idc='+idc+'&release='+release+'&csrfToken='+csrfToken
-    resss = sess.post(get_url, headers = get_headers, data=get_data, verify=False).text
-    # print(resss)
+    resss = sess.post(get_url, headers = get_headers, data=get_data).text
     pp = json.loads(resss)['entities'][0]
-    pattern = re.compile('(/infoplus.*)')
-    plus_url = re.findall(pattern, pp)[0]
-    step_pattern = re.compile('/form/(\d*)')
-    step_id = re.findall(step_pattern, pp)[0]
-    # print(plus_url, step_id)
-    
-    # 21:00 - 22:00
-    formData = {
-        "fieldXY2":"1",
-        "fieldWY":"wan",
-        "fieldXY1":"1",
-        "fieldSQrq":timestamp,
-        "fieldSQxm":xuehao,
-        "fieldXH":xuehao,
-        "fieldSQxy":"bks_100",  
-        "fieldSQnj":"2118",
-        "fieldSQbj":"1203",
-        "fieldSQxq":"1",
-        "fieldSQgyl":"1",
-        "fieldSQqsh":qinshi,
-        "fieldHidden":"",
-        "fieldSheng":"",
-        "fieldSheng_Name":"",
-        "fieldShi":"",
-        "fieldQu":"",
-        "fieldQums":"",
-        "fieldZtw":"1",    # 早晨
-        "fieldZtwyc":"",
-        "fieldZhongtw":"1",    # 中午
-        "fieldZhongtwyc":"",
-        "fieldWantw":"1",    # 下午
-        "fieldWantwyc":"",
-        "fieldHide":"",
-        "fieldXY3":"晚点名"    # 晚
+    plus_url = re.findall(re.compile('(/infoplus.*)'), pp)[0]    # 用于获取个人信息
+    step_id = re.findall(re.compile('/form/(\d*)'), pp)[0]    # step_id
+
+
+
+    # 获取个人信息
+    data_headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Host': 'vpns.jlu.edu.cn',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36',
+        'Referer': 'https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b'+plus_url,
+        'Cookie': cookie,
     }
-    
-    boundFields = "fieldXH,fieldZtw,fieldHidden,fieldSQqsh,fieldSQbj,fieldSQgyl,fieldQums,fieldQu,fieldSQxm,fieldWantw,fieldSQxy,fieldWY,fieldXY1,fieldZtwyc,fieldXY2,fieldXY3,fieldZhongtw,fieldSQxq,fieldShi,fieldWantwyc,fieldSQnj,fieldSheng,fieldZhongtwyc,fieldHide,fieldSQrq"
-    
+    post_url = 'https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b/infoplus/interface/render?vpn-12-o2-ehall.jlu.edu.cn'
+    postPayload = {'stepId': step_id, 'csrfToken': csrfToken}
+    r = sess.post(post_url, headers= data_headers, data=postPayload)
+    data = json.loads(r.content)['entities'][0]
+
+
+    # 6:00 -12:00
+    data['data']["fieldSQxq"] = "1"
+    data['data']["fieldSQgyl"] = "1"
+    data['data']["fieldSQgyl"] = qinshi
+    data['data']["fieldZtw"] = "1"    # 早、中签到
+
+    #提交
+    post_data = {
+        'actionId': 1,
+        'formData': json.dumps(data['data']),
+        'nextUsers': '{}',
+        'stepId': step_id,
+        'timestamp': int(time.time()),
+        'boundFields': ','.join(data['fields'].keys()),
+        'csrfToken': csrfToken
+    }
+
     # 开始签到
     post_headers = {
         'Host': 'vpns.jlu.edu.cn',
@@ -147,25 +147,8 @@ def qiandao(username, password, xuehao, qinshi):
         'Cookie': cookie,
     }
     post_url = 'https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b/infoplus/interface/doAction?vpn-12-o2-ehall.jlu.edu.cn'
-    post_data = {
-        'actionId': 1,
-        'formData': formData,
-        'remark': '',
-        'rand': rand,
-        'nextUsers': "{}",
-        'stepId': step_id,
-        'timestamp': timestamp,
-        'boundFields': boundFields,
-        'csrfToken': csrfToken,
-        'lang': 'zh',
-    }
-    post_data = urllib.parse.urlencode(post_data)
-    post_res = sess.post(post_url, headers=post_headers, data=post_data, verify=False).text
-    print(post_res)
 
-    # server酱推送
-    textPush = username + '签到信息'
-    despPush = post_res
-    urlPush = 'https://sc.ftqq.com/SCU107843T2f8731d8dcbb7b6fdae07ccb585b9c705f23e6e52ede8.send'    # 填写自己的推送地址，http://sc.ftqq.com/?c=wechat&a=bind
-    dataPush = {'text':textPush, 'desp':despPush}
-    requests.post(urlPush, data=dataPush, verify=False)
+
+    r = sess.post(post_url, headers=post_headers, data=post_data)
+    print(username+'签到信息：')
+    print(r.content)
