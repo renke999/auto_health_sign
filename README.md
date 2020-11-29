@@ -2,41 +2,10 @@
 
 **吉林大学每日自动健康打卡，配合腾讯云函数**
 
-**每天四个时间段的自动打卡，四个时间段打卡提交的表单如下，各参数含义已备注，若遇不同值可自行抓包分析：**
+**现只需在两个时段打卡，之前四个时间段打卡提交的form_Data信息各参数解释如下（两个时段的参数含义类似）**
 
+**此次更新后无需手动填写formData，通过https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b/infoplus/interface/render?vpn-12-o2-ehall.jlu.edu.cn 自动获取个人所有信息。**
 
-    # 7:00 - 8:00
-    form_Data = {
-        "fieldXY2":"",
-        "fieldWY":"1",
-        "fieldXY1":"",
-        "fieldSQrq":timestamp,
-        "fieldSQxm":xuehao,
-        "fieldXH":xuehao,
-        "fieldSQxy":"bks_100",
-        "fieldSQnj":"2118",
-        "fieldSQbj":"1203",
-        "fieldSQxq":"1",
-        "fieldSQgyl":"1",
-        "fieldSQqsh":qinshi,
-        "fieldHidden":"",
-        "fieldSheng":"",
-        "fieldSheng_Name":"",
-        "fieldShi":"",
-        "fieldQu":"",
-        "fieldQums":"",
-        "fieldZtw":"1",    # 早
-        "fieldZtwyc":"",
-        "fieldZhongtw":"",
-        "fieldZhongtwyc":"",
-        "fieldWantw":"",
-        "fieldWantwyc":"",
-        "fieldHide":"",
-        "fieldXY3":""
-    }
-
-
-    # 11:00 - 12:00
     formData = {
         "fieldXY2":"",    # fieldXY 是否显示隐藏表项
         "fieldWY":"zhong",
@@ -63,62 +32,4 @@
         "fieldWantwyc":"",
         "fieldHide":"",
         "fieldXY3":""    # 晚签到
-    }
-
-    # 17:00 - 18:00
-    formData = {"fieldXY2":"1",
-                "fieldWY":"wan",
-                "fieldXY1":"1",
-                "fieldSQrq":timestamp,
-                "fieldSQxm":xuehao,
-                "fieldXH":xuehao,
-                "fieldSQxy":"bks_100",
-                "fieldSQnj":"2118",
-                "fieldSQbj":"1203",
-                "fieldSQxq":"1",
-                "fieldSQgyl":"1",
-                "fieldSQqsh":qinshi,
-                "fieldHidden":"",
-                "fieldSheng":"",
-                "fieldSheng_Name":"",
-                "fieldShi":"",
-                "fieldQu":"",
-                "fieldQums":"",
-                "fieldZtw":"1",
-                "fieldZtwyc":"",
-                "fieldZhongtw":"1",    # 中
-                "fieldZhongtwyc":"",
-                "fieldWantw":"1",    # 下午
-                "fieldWantwyc":"",
-                "fieldHide":"",
-                "fieldXY3":""}
-
-    # 21:00 - 22:00
-    formData = {
-        "fieldXY2":"1",
-        "fieldWY":"wan",
-        "fieldXY1":"1",
-        "fieldSQrq":timestamp,
-        "fieldSQxm":xuehao,
-        "fieldXH":xuehao,
-        "fieldSQxy":"bks_100",  
-        "fieldSQnj":"2118",
-        "fieldSQbj":"1203",
-        "fieldSQxq":"1",
-        "fieldSQgyl":"1",
-        "fieldSQqsh":qinshi,
-        "fieldHidden":"",
-        "fieldSheng":"",
-        "fieldSheng_Name":"",
-        "fieldShi":"",
-        "fieldQu":"",
-        "fieldQums":"",
-        "fieldZtw":"1",    # 早晨
-        "fieldZtwyc":"",
-        "fieldZhongtw":"1",    # 中午
-        "fieldZhongtwyc":"",
-        "fieldWantw":"1",    # 下午
-        "fieldWantwyc":"",
-        "fieldHide":"",
-        "fieldXY3":"晚点名"    # 晚
     }
