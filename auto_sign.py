@@ -152,3 +152,5 @@ def qiandao(username, password, qinshi):
     r = sess.post(post_url, headers=post_headers, data=post_data)
     print(username+'签到信息：')
     print(r.content)
+
+            
