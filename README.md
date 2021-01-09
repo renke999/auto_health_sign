@@ -6,6 +6,8 @@
 
 **此次更新后无需手动填写formData，通过https://vpns.jlu.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e625c6b468ca88d1b203b/infoplus/interface/render?vpn-12-o2-ehall.jlu.edu.cn 自动获取个人所有信息。**
 
+**如果学校更改了打卡需要填的表项，那么只需要手动打一次，以后都可以自动打上了**
+
     formData = {
         "fieldXY2":"",    # fieldXY 是否显示隐藏表项
         "fieldWY":"zhong",
